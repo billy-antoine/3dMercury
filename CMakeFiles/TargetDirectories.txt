@@ -1,0 +1,3 @@
+/home/freddie/Applications/SfM/tests/3dmercury/CMakeFiles/edit_cache.dir
+/home/freddie/Applications/SfM/tests/3dmercury/CMakeFiles/rebuild_cache.dir
+/home/freddie/Applications/SfM/tests/3dmercury/CMakeFiles/3dMercury.dir

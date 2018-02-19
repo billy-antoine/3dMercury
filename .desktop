@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=3D Mercury
+Comment=3D reconstruction based on SfM and MVS algorithms
+Exec=/home/freddie/Applications/SfM/tests/3dmercury/3dMercury
+Path=/home/freddie/Applications/SfM/tests/3dmercury/
+Icon=/home/freddie/Applications/SfM/tests/3dmercury/icon.jpg
+Terminal=true
+Type=Application
+Categories=Utility;Development;
