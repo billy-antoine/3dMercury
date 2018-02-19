@@ -1,4 +1,5 @@
 #include "opencv2/opencv.hpp"
+#include "config.h"
 #include <ctime>
 #include <iostream>
 #include <cstdlib>
@@ -47,7 +48,7 @@ int main(int, char**)
 
     namedWindow("3D Mercury",1);
     Mat splash;
-    splash = imread("/home/freddie/Applications/SfM/tests/3dmercury/graphics/splash.png",1);
+    splash = imread(THIS_SOURCE_DIR+"graphics/splash.png",1);
     imshow("3D Mercury", splash);
 
     for(;;){
@@ -57,10 +58,10 @@ int main(int, char**)
     }
 
     // Building folders
-    std::string folder_day   = "/home/freddie/Bureau/3D_Mercury/"+getDay();
+    std::string folder_day   = THIS_SOURCE_DIR+"Results/"+getDay();
     std::string folder_time = folder_day+"/"+getTime();
 
-    std::system("cd /home/freddie/Bureau/3D_Mercury/");
+    std::system(("cd "    +THIS_SOURCE_DIR+"Results/").c_str());
     std::system(("mkdir "+folder_day).c_str()); 
     std::system(("mkdir "+folder_time).c_str()); 
     std::system(("mkdir "+folder_time+"/images").c_str());
@@ -85,13 +86,13 @@ int main(int, char**)
         }
     }
    
-    frame = imread("/home/freddie/Applications/SfM/tests/3dmercury/loader/wait10.png",1);
+    frame = imread(THIS_SOURCE_DIR+"loader/wait10.png",1);
     imshow("3D Mercury", frame);
     waitKey(20);
 
     destroyAllWindows();
 
-    std::system(("cd /home/freddie/Bureau/3D_Mercury && ./Global_SfM_pipeline.sh "+folder_time).c_str());
+    std::system(("cd "+THIS_SOURCE_DIR+"Results/ && ./Global_SfM_pipeline.sh " + folder_time + " " + MVG_BUILD_PATH + " " + MVS_BUILD_PATH + " " + MVG_PATH).c_str());
 
     for(int i=0; i<100; ++i){
 
@@ -103,7 +104,7 @@ int main(int, char**)
     
     destroyAllWindows();
 
-    std::system(("cd /home/freddie/Bureau/3D_Mercury && " + folder_time + "/Viewer scene_dense.mvs").c_str());
+    std::system(("cd "+THIS_SOURCE_DIR+"Results/ && " + folder_time + "/Viewer scene_dense.mvs").c_str());
     waitKey(0);
 
 
