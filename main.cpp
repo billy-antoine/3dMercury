@@ -34,28 +34,44 @@ std::string getDay(){
     return str;
 }
 
-int main(int, char**)
+int main(int argc, char *argv[])
 {
-    VideoCapture cap(0); // open the default camera
-    if(!cap.isOpened()){  // check if we succeeded
-	std::cout << "Camera not found" << std::endl;
-        return -1;
-    }
 
-    // Redefine camera resolution
-    cap.set(CV_CAP_PROP_FRAME_WIDTH,  1920);
-    cap.set(CV_CAP_PROP_FRAME_HEIGHT, 1080);
+	int cam_number = 0;
+	bool probe = true;
 
-    namedWindow("3D Mercury",1);
-    Mat splash;
-    splash = imread(THIS_SOURCE_DIR+"graphics/splash.png",1);
-    imshow("3D Mercury", splash);
+	if(argc > 1){
+		cam_number = atoi(argv[1]);
+	}
 
-    for(;;){
-        char c = waitKey(30);
-        if(c>=0)
-            break;
-    }
+	std::string image_folder;
+	if(argc > 2){
+		image_folder = argv[2];
+		probe = false;
+	}
+
+	VideoCapture cap(cam_number); // open the default camera
+	if(probe){
+	    if(!cap.isOpened()){  // check if we succeeded
+		std::cout << "Camera not found" << std::endl;
+	        return -1;
+	    }
+
+	    // Redefine camera resolution
+	    cap.set(CV_CAP_PROP_FRAME_WIDTH,  1920);
+	    cap.set(CV_CAP_PROP_FRAME_HEIGHT, 1080);
+
+		namedWindow("3D Mercury",1);
+	    Mat splash;
+	    splash = imread(THIS_SOURCE_DIR+"graphics/splash.png",1);
+	    imshow("3D Mercury", splash);
+
+	    for(;;){
+	        char c = waitKey(30);
+	        if(c>=0)
+	            break;
+	    }
+	}
 
     // Building folders
     std::string folder_day   = THIS_SOURCE_DIR+"Results/"+getDay();
@@ -66,26 +82,34 @@ int main(int, char**)
     std::system(("mkdir "+folder_time).c_str()); 
     std::system(("mkdir "+folder_time+"/images").c_str());
 
+
     int nb_images=0;
     Mat frame, tmp;
-    for(;;)
-    {
-        cap >> frame; // get a new frame from camera
 
-        imshow("3D Mercury", frame);
+    if(probe){
 
-        char c = waitKey(30);
-        if(c==32)
-            break;
-        if(c>=0){
-            bitwise_not(frame, tmp);
-            imshow("3D Mercury", tmp);
-            bilateralFilter(frame,tmp,5,80,80);
-            imwrite(folder_time+"/images/frame"+std::to_string(nb_images++)+".png", tmp);
-            waitKey(50);
-        }
+	    for(;;)
+	    {
+	        cap >> frame; // get a new frame from camera
+
+	        imshow("3D Mercury", frame);
+
+	        char c = waitKey(30);
+	        if(c==32)
+	            break;
+	        if(c>=0){
+	            bitwise_not(frame, tmp);
+	            imshow("3D Mercury", tmp);
+	            bilateralFilter(frame,tmp,5,80,80);
+	            imwrite(folder_time+"/images/frame"+std::to_string(nb_images++)+".png", tmp);
+	            waitKey(50);
+	        }
+	    }
+
+    } else{
+    	std::system(("cp -R " + image_folder + "/. " + folder_time+"/images/").c_str());
     }
-   
+
     frame = imread(THIS_SOURCE_DIR+"loader/wait10.png",1);
     imshow("3D Mercury", frame);
     waitKey(20);
